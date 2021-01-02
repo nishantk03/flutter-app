@@ -1,7 +1,6 @@
-import 'package:basic_app/question.dart';
+import 'package:basic_app/quiz.dart';
+import 'package:basic_app/result.dart';
 import 'package:flutter/material.dart';
-
-import 'answer.dart';
 
 void main() {
   runApp(MyApp());
@@ -15,52 +14,67 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final questions = const [
+  final _questions = const [
     {
       'question': 'What\'s your favourite color?',
-      'answer': ['Red', 'Organge', 'Green', 'Black']
+      'answer': [
+        {'text': 'Red', 'score': 10},
+        {'text': 'Organge', 'score': 8},
+        {'text': 'Green', 'score': 5},
+        {'text': 'Black', 'score': 2}
+      ]
     },
     {
       'question': 'What\'s your favourite animal?',
-      'answer': ['Rabbit', 'Lion', 'Dog', 'Cow']
+      'answer': [
+        {'text': 'Rabbit', 'score': 3},
+        {'text': 'Lion', 'score': 20},
+        {'text': 'Dog', 'score': 10},
+        {'text': 'Cow', 'score': 1}
+      ]
     },
     {
       'question': 'What\'s your favourite food?',
-      'answer': ['Panner', 'Mashroom', 'Chicken', 'Noodles']
+      'answer': [
+        {'text': 'Panner', 'score': 3},
+        {'text': 'Mashroom', 'score': 5},
+        {'text': 'Chicken', 'score': 8},
+        {'text': 'Noodles', 'score': 2}
+      ]
     },
   ];
 
   var _questionIndex = 0;
-  void _answerChoosen() {
+  var _quizScore = 0;
+
+  void _resetQuiz() {
+    setState(() {
+      _questionIndex = 0;
+      _quizScore = 0;
+    });
+  }
+
+  void _answerChoosen(score) {
     setState(() {
       _questionIndex++;
+      _quizScore += score;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    //var questions = ['This is the 1st question?', 'This is the 2nd question?'];
-
     return MaterialApp(
       home: Scaffold(
-          appBar: AppBar(
-            title: Text('Quiz'),
-          ),
-          body: _questionIndex < questions.length
-              ? Column(
-                  children: [
-                    Question(questions[_questionIndex]['question']),
-                    ...(questions[_questionIndex]['answer'] as List<String>)
-                        .map((ans) => Answer(_answerChoosen, ans))
-                        .toList()
-                  ],
-                )
-              : Center(
-                  child: Text(
-                    'You did it !!!',
-                    style: TextStyle(fontSize: 40, color: Colors.blue),
-                  ),
-                )),
+        appBar: AppBar(
+          title: Text('Quiz'),
+        ),
+        body: _questionIndex < _questions.length
+            ? Quiz(
+                quizQuestions: _questions,
+                answerHandler: _answerChoosen,
+                questionIndex: _questionIndex)
+            : Result(_quizScore, _resetQuiz),
+      ),
     );
   }
 }
