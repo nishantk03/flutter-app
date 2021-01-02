@@ -38,9 +38,9 @@ class _MyAppState extends State<MyApp> {
           body: Column(
             children: [
               Question(questions[_questionIndex]),
-              Answer(),
-              Answer(),
-              Answer(),
+              Answer(_answerChoosen),
+              Answer(_answerChoosen),
+              Answer(_answerChoosen),
             ],
           )),
     );
